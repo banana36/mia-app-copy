@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { signIn } from "../../store/actions/authActions";
 
 // SignIn Class Component
 const SignIn = () => {
+  const history = useHistory();
   const auth = useSelector((state) => state.auth);
 
   // State
@@ -22,6 +23,7 @@ const SignIn = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     signIn(credentials);
+    history.push("/");
   };
 
   // Render

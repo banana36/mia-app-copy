@@ -13,7 +13,7 @@ import firebase from "./config/fbConfig";
 import {
   isLoaded,
   ReactReduxFirebaseProvider,
-  getFirebase,
+  getFirebase
 } from "react-redux-firebase";
 import { createFirestoreInstance } from "redux-firestore";
 
@@ -27,7 +27,7 @@ const store = createStore(
 // RRF Config
 const rrfConfig = {
   userProfile: "users",
-  useFirestoreForProfile: true,
+  useFirestoreForProfile: true
 };
 
 // React Redux Firebase - Props
@@ -35,12 +35,13 @@ const rrfProps = {
   firebase,
   config: rrfConfig, // For setting up users,
   dispatch: store.dispatch,
-  createFirestoreInstance,
+  createFirestoreInstance
 };
 
 // Auth Is Loaded function
 function AuthIsLoaded({ children }) {
   const auth = useSelector((state) => state.firebase.auth);
+  console.log("DEBUG::  ~ auth auth", auth);
   if (!isLoaded(auth)) return <div></div>;
   return children;
 }
@@ -75,3 +76,5 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+export { store };

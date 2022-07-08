@@ -1,77 +1,79 @@
 import { createNotification } from "./functions/functions";
 import Swal from "sweetalert2";
+import { getFirebase } from "react-redux-firebase";
+import { store } from "../..";
 
 // SignIn
 export const signIn = (credentials) => {
-  return (dispatch, getState, { getFirebase }) => {
-    // Initialize firebase
-    const firebase = getFirebase();
-    console.log("DEBUG::  ~ firebase", firebase);
+  // return (dispatch, getState) => {
+  // Initialize firebase
+  const firebase = getFirebase();
+  console.log("DEBUG::  ~ firebase", firebase);
 
-    // Sign In user
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(
-        // Email and pwd
-        credentials.email,
-        credentials.password
-      )
-      .then(() => {
-        // Login success
-        dispatch({ type: "LOGIN_SUCCESS" });
-        // Alert Success
-        // Show alert
+  // Sign In user
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(
+      // Email and pwd
+      credentials.email,
+      credentials.password
+    )
+    .then(() => {
+      // Login success
+      store.dispatch({ type: "LOGIN_SUCCESS" });
+      // Alert Success
+      // Show alert
+      Swal.fire({
+        icon: "success",
+        title: "Login Success!",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        // Logic
+      });
+    })
+    .catch((err) => {
+      // Identify the error
+      if (err.code === "auth/wrong-password") {
+        // Set error to wrong-password
+        // Fire the alert
         Swal.fire({
-          icon: "success",
-          title: "Login Success!",
+          icon: "error",
+          title: "Password is incorrect !",
           showConfirmButton: false,
           timer: 1500
         }).then(() => {
-          // Logic
+          // Empty the form
+          window.location.reload(false);
         });
-      })
-      .catch((err) => {
-        // Identify the error
-        if (err.code === "auth/wrong-password") {
-          // Set error to wrong-password
-          // Fire the alert
-          Swal.fire({
-            icon: "error",
-            title: "Password is incorrect !",
-            showConfirmButton: false,
-            timer: 1500
-          }).then(() => {
-            // Empty the form
-            window.location.reload(false);
-          });
-        } else if (err.code === "auth/user-not-found") {
-          // Fire the alert
-          Swal.fire({
-            icon: "error",
-            title: "User not found !",
-            showConfirmButton: false,
-            timer: 1500
-          }).then(() => {
-            // Empty the form
-            window.location.reload(false);
-          });
-        } else if (err.code === "auth/too-many-requests") {
-          // Fire the alert
-          Swal.fire({
-            icon: "error",
-            title: "Too many failed login attempts, please try again later !",
-            showConfirmButton: false,
-            timer: 1500
-          }).then(() => {
-            // Empty the form
-            window.location.reload(false);
-          });
-        }
+      } else if (err.code === "auth/user-not-found") {
+        // Fire the alert
+        Swal.fire({
+          icon: "error",
+          title: "User not found !",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          // Empty the form
+          window.location.reload(false);
+        });
+      } else if (err.code === "auth/too-many-requests") {
+        // Fire the alert
+        Swal.fire({
+          icon: "error",
+          title: "Too many failed login attempts, please try again later !",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          // Empty the form
+          window.location.reload(false);
+        });
+      }
 
-        // Login Error
-        dispatch({ type: "LOGIN_ERROR", err });
-      });
-  };
+      // Login Error
+      store.dispatch({ type: "LOGIN_ERROR", err });
+    });
+  // };
 };
 
 // SignOut

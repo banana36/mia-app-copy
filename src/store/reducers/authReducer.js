@@ -1,10 +1,11 @@
 // Initial State
 const initialState = {
-  authError: null,
+  authError: null
 };
 
 // Auth Reducer
 const authReducer = (state = initialState, action) => {
+  console.log("DEBUG::  ~ action", action);
   switch (action.type) {
     case "LOGIN_ERROR":
       return state;
@@ -18,13 +19,13 @@ const authReducer = (state = initialState, action) => {
     case "SIGNUP_SUCCESS":
       return {
         ...state,
-        authError: null,
+        authError: null
       };
 
     case "SIGNUP_ERROR":
       return {
         ...state,
-        authError: action.err.message, // Error Message
+        authError: action.err.message // Error Message
       };
 
     default:
